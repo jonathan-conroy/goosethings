@@ -26,3 +26,5 @@ Open the news articles in a browser; save the HTML to the Downloads folder (on F
    (This one has some issues with detecting the end of the article, but this is fixable manually)
 - The Hill  
     (Basically untested)
+    
+I forget what metadata is supposed to be at the top of each article, so right now it just has the article title and the URL of the news source, followed by the article text.
