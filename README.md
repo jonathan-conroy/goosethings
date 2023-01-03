@@ -17,10 +17,10 @@ To finish setup, open `main.py` and edit the three global variables. (As is hope
 ### To run:
 Open the news articles in a browser; save the HTML to the Downloads folder (on Firefox, the shortcut is just `cmd-s`, and it should be saved as "Web Page, HTML only" or perhaps "Web Page, complete"). Running `python main.py` will look at the most recently modified files in `DOWNLOADS`; it will attempt to parse the most recent `NUM_FILES` of them and save the output as a word document.
 
-Currently supported sites:
-- Washington Post
+**Currently supported sites:**
+- Washington Post  
   (Hopefully, this works)
-- New York Times
+- New York Times  
   (Some headers may be incorrectly removed, but they will probably be marked as "Removed")
 - Wall Street Journal  
    (This one has some issues with detecting the end of the article, but this is fixable manually)
