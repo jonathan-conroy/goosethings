@@ -13,19 +13,19 @@
 # (-) Has issues
 
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
 
-def parse(url, html_input):
-    site = urlparse(url).netloc
+def parse(domain, html_input):
     soup = BeautifulSoup(html_input, 'html.parser')
-    if site == "www.nytimes.com":
+    if domain == "www.nytimes.com":
         return parse_nyt(soup)
-    elif site == "www.washingtonpost.com":
+    elif domain == "www.washingtonpost.com":
         return parse_washpost(soup)
-    elif site == "www.wsj.com":
+    elif domain == "www.wsj.com":
         return parse_wsj(soup)
-    elif site == "thehill.com":
+    elif domain == "thehill.com":
         return parse_hill(soup)
+    else:
+        return None, None
 
 
 POSSIBLE_TAGS = ["p", "h1", "h2", "h3", "h4", "h5", "h6"]
@@ -44,7 +44,7 @@ def parse_washpost(soup):
         else:
             valid.append(p.get_text())
 
-    return ("\n\n".join(valid), removed)
+    return (valid, removed)
 
 def parse_nyt(soup):
     select_str = ", ".join([f"section[name=articleBody] {x}" for x in POSSIBLE_TAGS])
@@ -55,12 +55,13 @@ def parse_nyt(soup):
     valid = []
     removed = []
     for p in pars:
-        if " ".join(p.attrs['class']) not in {NORMAL_NYT, HEADER_NYT}:
-            removed.append(p.get_text())
+        if 'class' not in p.attrs or \
+            " ".join(p.attrs['class']) not in {NORMAL_NYT, HEADER_NYT}:
+            removed.append(p.get_text().replace("\n", ""))
         else:
-            valid.append(p.get_text())
+            valid.append(p.get_text().replace("\n", ""))
 
-    return ("\n\n".join(valid), removed)
+    return (valid, removed)
 
 def parse_wsj(soup):
     select_str = ", ".join([f".article {x}" for x in POSSIBLE_TAGS])
@@ -80,7 +81,7 @@ def parse_wsj(soup):
         else:
             valid.append(p.get_text().replace("\n", ""))
 
-    return ("\n\n".join(valid), removed)
+    return (valid, removed)
 
 def parse_hill(soup):
     select_str = ", ".join([f".article__text {x}" for x in POSSIBLE_TAGS])
@@ -92,7 +93,7 @@ def parse_hill(soup):
         else:
             valid.append(p.get_text().replace("\n", "").strip())
 
-    return ("\n\n".join(valid), removed)
+    return (valid, removed)
 
 def parse_politico(soup):
     ...
